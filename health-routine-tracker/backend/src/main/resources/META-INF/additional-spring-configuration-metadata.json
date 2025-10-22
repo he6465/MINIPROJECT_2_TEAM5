@@ -1,0 +1,34 @@
+{
+  "groups": [
+    {
+      "name": "jwt",
+      "type": "com.hrt.health_routine_tracker.config.JwtProperties",
+      "sourceType": "com.hrt.health_routine_tracker.config.JwtProperties"
+    },
+    {
+      "name": "cors",
+      "type": "java.lang.Object",
+      "sourceType": "com.hrt.health_routine_tracker.config.WebConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "JWT secret key"
+    },
+    {
+      "name": "jwt.access-exp-minutes",
+      "type": "java.lang.Long",
+      "description": "Access token expiration in minutes",
+      "defaultValue": 30
+    },
+    {
+      "name": "cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Comma-separated list of allowed origins for CORS"
+    }
+  ]
+}
+
+

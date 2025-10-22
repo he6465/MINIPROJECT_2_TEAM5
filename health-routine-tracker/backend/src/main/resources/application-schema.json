@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/spring/application-schema.json",
+  "title": "Spring Application Properties",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "spring": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "web": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "cors": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "allowed-origins": {
+                  "type": "string",
+                  "description": "Comma-separated list of allowed origins"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "server": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "management": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "springdoc": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "cors": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "allowed-origins": {
+          "type": "string",
+          "description": "Comma-separated list of allowed origins"
+        }
+      }
+    },
+    "jwt": {
+      "type": "object",
+      "title": "JWT Properties",
+      "properties": {
+        "secret": {
+          "type": "string",
+          "description": "JWT secret key"
+        },
+        "access-exp-minutes": {
+          "type": "integer",
+          "description": "Access token expiration in minutes",
+          "default": 30
+        }
+      },
+      "required": ["secret"],
+      "additionalProperties": false
+    }
+  }
+}
+
+

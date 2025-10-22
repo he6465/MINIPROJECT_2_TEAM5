@@ -1,0 +1,11 @@
+import{n as s,r as d,j as e}from"./index-C3R8RNym.js";/**
+ * @license lucide-react v0.544.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const p=[["path",{d:"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",key:"ct8e1f"}],["path",{d:"M14.084 14.158a3 3 0 0 1-4.242-4.242",key:"151rxh"}],["path",{d:"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",key:"13bj9a"}],["path",{d:"m2 2 20 20",key:"1ooewy"}]],x=s("eye-off",p);/**
+ * @license lucide-react v0.544.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const u=[["path",{d:"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",key:"1nclc0"}],["circle",{cx:"12",cy:"12",r:"3",key:"1v7zrd"}]],y=s("eye",u);function h({label:t,error:a,style:n,hintId:i,...c}){const[o,l]=d.useState(!1);return e.jsxs("label",{style:{display:"grid",gap:6},children:[t,e.jsxs("div",{style:{position:"relative"},children:[e.jsx("input",{...c,type:o?"text":"password","aria-invalid":!!a,"aria-describedby":i,style:{padding:"12px 52px 12px 14px",borderRadius:12,border:a?"1px solid #ef4444":"1px solid var(--color-border)",background:"var(--color-surface)",color:"var(--color-fg)",boxShadow:"0 1px 2px rgba(0,0,0,0.04)",outlineColor:"var(--lime-300)",transition:"box-shadow 150ms ease, border-color 150ms ease",width:"100%",boxSizing:"border-box",...n}}),e.jsxs("button",{type:"button",onClick:()=>l(r=>!r),"aria-label":o?"비밀번호 숨기기":"비밀번호 표시","aria-pressed":o,style:{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",width:32,height:32,display:"inline-flex",alignItems:"center",justifyContent:"center",background:"var(--color-surface)",border:"none",borderRadius:10,boxShadow:"var(--elevation-1)",color:"var(--color-fg)",cursor:"pointer"},onMouseEnter:r=>{r.currentTarget.style.background="var(--mint-100)"},onMouseLeave:r=>{r.currentTarget.style.background="var(--color-surface)"},children:[o?e.jsx(x,{className:"h-4 w-4"}):e.jsx(y,{className:"h-4 w-4"}),e.jsx("span",{className:"sr-only",children:o?"숨기기":"표시"})]})]}),a&&e.jsx("span",{style:{color:"#ef4444",fontSize:12},children:a})]})}export{h as P};

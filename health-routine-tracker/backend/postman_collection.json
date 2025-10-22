@@ -1,0 +1,51 @@
+{
+  "info": {
+    "name": "Health Routine Tracker API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:8080/v1/auth/register", "host": ["http://localhost:8080"], "path": ["v1","auth","register"]},
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"test@example.com\",\n  \"username\": \"test\",\n  \"nickname\": \"테스트\",\n  \"password\": \"pass1234\"\n}"}
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:8080/v1/auth/login", "host": ["http://localhost:8080"], "path": ["v1","auth","login"]},
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"pass1234\"\n}"}
+      }
+    },
+    {
+      "name": "Routines - Create",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:8080/v1/routines", "host": ["http://localhost:8080"], "path": ["v1","routines"]},
+        "body": {"mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"routineDate\": \"2025-01-01\",\n  \"exerciseType\": \"RUN\",\n  \"exerciseMinutes\": 30,\n  \"sleepHours\": 7.5,\n  \"meals\": \"아:샐러드 점:현미 저:닭가슴살\",\n  \"waterMl\": 2000,\n  \"note\": \"샘플\"\n}"}
+      }
+    },
+    {
+      "name": "Routines - List",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/v1/routines?userId=1&page=1&size=20&sort=date,desc"
+      }
+    },
+    {
+      "name": "Stats - Weekly",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/v1/stats/weekly?userId=1&startDate=2025-01-01"
+      }
+    }
+  ]
+}
+
+

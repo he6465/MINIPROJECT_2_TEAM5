@@ -1,0 +1,62 @@
+{
+  "_comment": "Health Routine Tracker 프론트엔드 패키지 설정 파일",
+  "_description": "React + TypeScript + Vite 기반의 모던 웹 애플리케이션",
+  "_author": "Health Routine Tracker Team",
+  "_version": "1.0",
+  "_since": "2024",
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "_comment_scripts": "개발 및 빌드 관련 스크립트들",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:ui": "vitest"
+  },
+  "dependencies": {
+    "_comment_dependencies": "프로덕션 의존성 패키지들",
+    "@tanstack/react-query": "^5.87.4",
+    "axios": "^1.11.0",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.544.0",
+    "msw": "^2.11.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
+    "recharts": "^3.2.0"
+  },
+  "devDependencies": {
+    "_comment_devDependencies": "개발 및 빌드 도구 의존성 패키지들",
+    "@eslint/js": "^9.33.0",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "jsdom": "^26.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.39.1",
+    "vite": "^7.1.2",
+    "vitest": "^3.2.4"
+  },
+  "msw": {
+    "_comment_msw": "Mock Service Worker 설정 - API 모킹을 위한 설정",
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}
