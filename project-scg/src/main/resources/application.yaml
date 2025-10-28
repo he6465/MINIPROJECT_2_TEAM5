@@ -1,0 +1,41 @@
+server:
+  port: 8080  
+
+spring:
+  application:
+    name: sc-gateway  
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true              
+          lower-case-service-id: true  
+
+      routes:
+        - id: project-user
+          uri: lb://project-user    
+          predicates:
+            - Path=/v1/**           
+          filters:
+            - StripPrefix=1         
+        - id: httpbin-test
+          uri: https://httpbin.org
+          predicates:
+            - Path=/test/**          
+          filters:
+            - StripPrefix=1         
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://sc-eureka:8761/eureka}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: INFO
+    org.springframework.web.reactive: INFO
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: INFO

@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: project-front:latest
+    container_name: project-front
+    ports:
+      - "8088:80"   # http://localhost:8088
+    # Linux/WSL에서도 host.docker.internal을 쓰도록 보장
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

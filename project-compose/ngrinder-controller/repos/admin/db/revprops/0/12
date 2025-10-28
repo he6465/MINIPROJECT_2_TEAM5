@@ -1,0 +1,13 @@
+K 8
+svn:date
+V 27
+2025-10-27T05:12:17.418000Z
+K 7
+svn:log
+V 57
+Quick test for http://host.docker.internal:9080/v1/health
+K 10
+svn:author
+V 5
+admin
+END

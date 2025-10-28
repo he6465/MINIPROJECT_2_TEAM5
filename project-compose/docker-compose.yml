@@ -1,0 +1,139 @@
+name: awsgoo
+services:
+
+  # 1) Eureka
+  sc-eureka:
+    image: rudals831/project-eureka:0.1.0
+    container_name: sc-eureka
+    ports:
+      - "8765:8761"
+    environment:
+      - SERVER_PORT=8761
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info
+      - MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true
+    healthcheck:
+      test: ["CMD-SHELL","curl -fsS http://localhost:8761/actuator/health | grep -q UP || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    networks: [msa-net]
+
+  # 2) MariaDB
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: ps140825!
+      MARIADB_DATABASE: project_user
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: app_pass_123!
+    healthcheck:
+      test: ["CMD-SHELL","mariadb-admin ping -h 127.0.0.1 -u${MARIADB_USER} -p${MARIADB_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks: [msa-net]
+
+  # 3) User Service
+  sc-user-svc:
+    image: rudals831/project-user:0.1.7
+    container_name: project-user
+    environment:
+      - SERVER_PORT=8081
+      - SPRING_APPLICATION_NAME=project-user
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://sc-eureka:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/project_user
+      - SPRING_DATASOURCE_USERNAME=appuser
+      - SPRING_DATASOURCE_PASSWORD=app_pass_123!
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.mariadb.jdbc.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MariaDBDialect
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info
+      - MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true
+    depends_on:
+      sc-eureka: { condition: service_healthy }
+      mariadb:   { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL","curl -fsS http://localhost:8081/actuator/health | grep -q UP || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    expose:
+      - "8081"   # 같은 네트워크 내 접근용
+    networks: [msa-net]
+
+  # 4) Spring Cloud Gateway
+  scg-proxy:
+    # 새로 빌드했다면 태그를 0.1.5 등으로 올려서 사용하세요.
+    image: rudals831/project-scg:0.1.8
+    container_name: scg-proxy
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_APPLICATION_NAME=sc-gateway
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://sc-eureka:8761/eureka
+      - SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_ENABLED=true
+      - SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_LOWER_CASE_SERVICE_ID=true
+      # 🔥 StripPrefix 자동 필터는 제거 (수동 라우팅과 충돌 소지)
+      # - SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_FILTERS_0_NAME=StripPrefix
+      # - SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_FILTERS_0_ARGS_PARTS=1
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,gateway
+    depends_on:
+      sc-eureka:   { condition: service_healthy }
+      sc-user-svc: { condition: service_healthy }
+    ports:
+      - "9080:8080"
+    healthcheck:
+      test: ["CMD-SHELL","curl -fsS http://localhost:8080/actuator/health | grep -q UP || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+    networks: [msa-net]
+
+  # 5) Frontend (Nginx + React)
+  web:
+    build:
+      # project-compose 폴더 기준으로 프론트가 ../project-front 위치에 있을 때
+      context: ../project-front
+      dockerfile: Dockerfile
+    image: project-front:latest
+    container_name: project-front
+    depends_on:
+      - scg-proxy
+    ports:
+      - "8088:80"   # http://localhost:8088
+    # 같은 네트워크라서 host.docker.internal 불필요
+    networks: [msa-net]
+
+  # (옵션) nGrinder
+  controller:
+    image: ngrinder/controller:3.5.9-p1
+    platform: linux/amd64
+    container_name: awsgoo-controller-1
+    restart: always
+    ports:
+      - "8300:80"
+      - "16001:16001"
+      - "12000-12009:12000-12009"
+    volumes:
+      - /home/user/code/project-compose/ngrinder-controller:/opt/ngrinder-controller
+    networks: [msa-net]
+
+  agent:
+    image: ngrinder/agent:3.5.9-p1
+    platform: linux/amd64
+    container_name: awsgoo-agent-1
+    restart: always
+    depends_on:
+      - controller
+    networks: [msa-net]
+
+networks:
+  msa-net:
+    driver: bridge
+
+volumes:
+  mariadb_data:
