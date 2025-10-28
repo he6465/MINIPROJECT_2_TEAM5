@@ -1,0 +1,1 @@
+import{j as s}from"./index-CHXlbPyc.js";function i({title:a,subtitle:e,children:n,id:c}){return s.jsx("section",{id:c,className:"page",children:s.jsxs("div",{className:"app-container",children:[(a||e)&&s.jsxs("div",{className:"section-head",style:{marginBottom:8},children:[a&&s.jsx("h2",{children:a}),e&&s.jsx("span",{className:"muted",children:e})]}),n]})})}export{i as S};

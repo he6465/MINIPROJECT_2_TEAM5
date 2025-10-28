@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/v1/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>건강 루틴 트래커</title>
+    <meta name="description" content="수면·운동·수분 섭취를 한눈에 기록·분석하는 건강 루틴 트래커" />
+    <meta property="og:title" content="건강 루틴 트래커" />
+    <meta property="og:description" content="수면 · 운동 · 수분 섭취를 한 눈에 기록·분석" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/v1/logo.png" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0f0a" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css" />
+    <link rel="preload" as="font" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/woff2/Pretendard-Regular.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="font" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/woff2/Pretendard-SemiBold.woff2" type="font/woff2" crossorigin>
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('hrt:theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved || (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/v1/assets/index-CaxNZczB.js"></script>
+    <link rel="stylesheet" crossorigin href="/v1/assets/index-CdFu52-k.css">
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div id="root"></div>
+  </body>
+</html>

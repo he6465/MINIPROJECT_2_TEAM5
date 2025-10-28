@@ -1,0 +1,33 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Java / Gradle
+.gradle/
+build/
+bin/
+out/
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+
+# Env / Secrets
+.env
+.env.*
+.env.*.local
+
+# Project-specific
+backend/build/
+backend/bin/
+frontend/dist/
+frontend/node_modules/
+

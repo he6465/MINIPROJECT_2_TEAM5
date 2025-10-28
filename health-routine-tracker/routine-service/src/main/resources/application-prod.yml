@@ -1,0 +1,15 @@
+logging:
+  level:
+    root: WARN
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+spring:
+  flyway:
+    table: flyway_history_routine
+    baseline-on-migrate: true

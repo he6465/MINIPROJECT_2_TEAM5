@@ -10,4 +10,6 @@ public interface LikeRepository extends JpaRepository<Like,Long> {
     Optional<Like> findByRoutineIdAndUserId(Long routineId, Long userId);
     long countByRoutineId(Long routineId);
     boolean existsByRoutineIdAndUserId(Long routineId, Long userId);
+    void deleteByRoutineIdIn(java.util.List<Long> routineIds);
+    void deleteByUserId(Long userId);
 }

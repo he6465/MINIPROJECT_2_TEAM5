@@ -55,8 +55,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleEtc(Exception e) {
+        // 디버그 편의를 위해 메세지를 그대로 노출(개발용)
         return ResponseEntity.status(ErrorCode.SERVER_ERROR.getHttpStatus())
-                .body(ApiResponse.error(ErrorCode.SERVER_ERROR.getCode(), ErrorCode.SERVER_ERROR.getDefaultMessage()));
+                .body(ApiResponse.error(ErrorCode.SERVER_ERROR.getCode(), e.getMessage()));
     }
 }
 

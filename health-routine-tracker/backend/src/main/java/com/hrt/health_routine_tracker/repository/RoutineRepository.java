@@ -20,4 +20,6 @@ public interface RoutineRepository extends JpaRepository<Routine,Long> {
 
     // 통계용: 페이징 없이 기간 전체 조회 (오름차순)
     List<Routine> findByUserIdAndRoutineDateBetweenOrderByRoutineDateAsc(Long userId, LocalDate from, LocalDate to);
+
+    List<Routine> findByUserId(Long userId);
 }

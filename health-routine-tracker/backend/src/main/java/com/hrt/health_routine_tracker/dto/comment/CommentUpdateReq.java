@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class CommentUpdateReq {
-    @NotNull
+    // PathVariable로 전달되므로 본문에서는 필수가 아님
     private Long commentId;
     @NotNull
     private Long userId;

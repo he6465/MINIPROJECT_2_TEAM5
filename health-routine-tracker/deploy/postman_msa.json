@@ -1,0 +1,54 @@
+{
+  "info": {
+    "name": "HRT MSA Smoke",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "hrt-msa-smoke"
+  },
+  "item": [
+    {
+      "name": "Gateway Health",
+      "request": { "method": "GET", "url": "{{base}}/actuator/health" }
+    },
+    {
+      "name": "Routine Health",
+      "request": { "method": "GET", "url": "{{base}}/routines/health" }
+    },
+    {
+      "name": "Public Routines",
+      "request": { "method": "GET", "url": "{{base}}/routines/public?page=1&size=5" }
+    },
+    {
+      "name": "Create Routine",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "X-User-Id", "value": "{{userId}}" }, { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"routineDate\": \"{{today}}\",\n  \"sleepHours\": 7.5,\n  \"exerciseType\": \"WALK\",\n  \"exerciseMinutes\": 30,\n  \"meals\": \"salad\",\n  \"waterMl\": 1500,\n  \"note\": \"postman\"\n}" },
+        "url": "{{base}}/routines"
+      }
+    },
+    {
+      "name": "Comments: Create",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "X-User-Id", "value": "{{userId}}" }, { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"routineId\": {{routineId}},\n  \"content\": \"hello\"\n}" },
+        "url": "{{base}}/comments"
+      }
+    },
+    {
+      "name": "Likes: Toggle",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "X-User-Id", "value": "{{userId}}" } ],
+        "url": "{{base}}/likes/routine/{{routineId}}"
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base", "value": "http://localhost:8080" },
+    { "key": "userId", "value": "1" },
+    { "key": "today", "value": "2025-01-01" },
+    { "key": "routineId", "value": "1" }
+  ]
+}
+

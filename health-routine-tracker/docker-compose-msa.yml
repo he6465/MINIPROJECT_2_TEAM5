@@ -1,0 +1,178 @@
+version: '3.8'
+
+services:
+  # 인프라: MariaDB
+  mariadb:
+    image: mariadb:11
+    container_name: hrt-mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: health_routine_tracker
+      MYSQL_USER: hrt_user
+      MYSQL_PASSWORD: hrt_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - hrt-msa-net
+    healthcheck:
+      test: ["CMD", "mariadb", "-uhrt_user", "-phrt_password", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 인프라: Redis
+  redis:
+    image: redis:7-alpine
+    container_name: hrt-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - hrt-msa-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MSA: Eureka Server
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: hrt-eureka
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    networks:
+      - hrt-msa-net
+
+  # MSA: API Gateway
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: hrt-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - hrt-msa-net
+
+  # MSA: Auth Service
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: hrt-auth-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/health_routine_tracker
+      SPRING_DATASOURCE_USERNAME: hrt_user
+      SPRING_DATASOURCE_PASSWORD: hrt_password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - mariadb
+      - eureka-server
+    networks:
+      - hrt-msa-net
+    deploy:
+      replicas: 1
+
+  # MSA: Routine Service
+  routine-service:
+    build:
+      context: ./routine-service
+      dockerfile: Dockerfile
+    container_name: hrt-routine-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/health_routine_tracker
+      SPRING_DATASOURCE_USERNAME: hrt_user
+      SPRING_DATASOURCE_PASSWORD: hrt_password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - mariadb
+      - eureka-server
+    networks:
+      - hrt-msa-net
+    deploy:
+      replicas: 1
+
+  # MSA: Comment Service
+  comment-service:
+    build:
+      context: ./comment-service
+      dockerfile: Dockerfile
+    container_name: hrt-comment-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/health_routine_tracker
+      SPRING_DATASOURCE_USERNAME: hrt_user
+      SPRING_DATASOURCE_PASSWORD: hrt_password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - mariadb
+      - eureka-server
+    networks:
+      - hrt-msa-net
+    deploy:
+      replicas: 1
+
+  # MSA: Like Service
+  like-service:
+    build:
+      context: ./like-service
+      dockerfile: Dockerfile
+    container_name: hrt-like-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/health_routine_tracker
+      SPRING_DATASOURCE_USERNAME: hrt_user
+      SPRING_DATASOURCE_PASSWORD: hrt_password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - mariadb
+      - eureka-server
+    networks:
+      - hrt-msa-net
+    deploy:
+      replicas: 1
+
+  # MSA: Stats Service
+  stats-service:
+    build:
+      context: ./stats-service
+      dockerfile: Dockerfile
+    container_name: hrt-stats-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/health_routine_tracker
+      SPRING_DATASOURCE_USERNAME: hrt_user
+      SPRING_DATASOURCE_PASSWORD: hrt_password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_REDIS_HOST: redis
+    depends_on:
+      - mariadb
+      - redis
+      - eureka-server
+    networks:
+      - hrt-msa-net
+    deploy:
+      replicas: 1
+
+
+volumes:
+  mariadb-data:
+
+networks:
+  hrt-msa-net:
+    driver: bridge
+

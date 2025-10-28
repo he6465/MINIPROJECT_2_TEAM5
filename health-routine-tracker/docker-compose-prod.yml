@@ -1,0 +1,126 @@
+﻿version: '3.9'
+services:
+  nginx-cache:
+    image: nginx:1.25-alpine
+    container_name: hrt-nginx-cache
+    depends_on: [gateway]
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx-cache.conf:/etc/nginx/nginx.conf:ro
+    networks: [hrt]
+  eureka-server:
+    image: health-routine-tracker-eureka-server
+    build: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks: [hrt]
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$MARIADB_ROOT_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [hrt]
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks: [hrt]
+
+  gateway:
+    image: health-routine-tracker-gateway
+    build: ./gateway
+    depends_on: [eureka-server]
+    ports:
+      - "8080:8080"
+    networks: [hrt]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      CORS_ALLOWED_ORIGIN_PATTERNS: http://localhost,http://127.0.0.1,https://your-domain.example
+
+  auth-service:
+    image: health-routine-tracker-auth-service
+    build: ./auth-service
+    depends_on: [mariadb, eureka-server]
+    networks: [hrt]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}}
+      SPRING_DATASOURCE_USERNAME: ${MARIADB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
+
+  routine-service:
+    image: health-routine-tracker-routine-service
+    build: ./routine-service
+    depends_on: [mariadb, eureka-server]
+    networks: [hrt]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}}
+      SPRING_DATASOURCE_USERNAME: ${MARIADB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
+
+  comment-service:
+    image: health-routine-tracker-comment-service
+    build: ./comment-service
+    depends_on: [mariadb, eureka-server]
+    networks: [hrt]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}}
+      SPRING_DATASOURCE_USERNAME: ${MARIADB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
+
+  like-service:
+    image: health-routine-tracker-like-service
+    build: ./like-service
+    depends_on: [mariadb, eureka-server]
+    networks: [hrt]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}}
+      SPRING_DATASOURCE_USERNAME: ${MARIADB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
+
+  stats-service:
+    image: health-routine-tracker-stats-service
+    build: ./stats-service
+    depends_on: [mariadb, eureka-server]
+    networks: [hrt]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}}
+      SPRING_DATASOURCE_USERNAME: ${MARIADB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
+
+  frontend:
+    image: health-routine-tracker-frontend
+    build: ./frontend
+    depends_on: [gateway]
+    networks: [hrt]
+
+  # ?꾨줎?몄뿏??蹂꾨룄 諛고룷 ???ъ슜. 罹먯떆 ?꾨줉?쒕? ?꾨줎???욌떒????寃쎌슦 二쇱꽍 ?좎?.
+  # frontend:
+  #   build: ./frontend
+  #   image: health-routine-tracker-frontend
+  #   depends_on: [gateway]
+  #   ports:
+  #     - "8088:80"
+  #   networks: [hrt]
+
+networks:
+  hrt:
+    driver: bridge
+
+

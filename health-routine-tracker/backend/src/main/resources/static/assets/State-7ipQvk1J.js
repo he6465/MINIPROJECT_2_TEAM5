@@ -1,0 +1,1 @@
+import{j as e}from"./index-ooePGNJt.js";function a({message:r="표시할 데이터가 없습니다."}){return e.jsx("div",{className:"card muted",role:"status","aria-live":"polite",children:r})}function s({message:r="문제가 발생했습니다. 잠시 후 다시 시도해 주세요."}){return e.jsx("div",{className:"card",style:{color:"#ef4444"},role:"alert",children:r})}export{a as E,s as a};
